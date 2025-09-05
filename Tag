@@ -24,6 +24,11 @@ local TAG_GROUPS = {
         Color = Color3.fromRGB(255, 255, 0)
     },
     {
+        Names = { "faroukhaddiedevelope2" },
+        Text = "(Blacklisted)\nFucking loser 🤣",
+        Color = Color3.fromRGB(40, 168, 8)
+    },
+        {
         Names = { "yourgames9" },
         Text = "(Youtuber)\nZombie",
         Color = Color3.fromRGB(40, 168, 8)
