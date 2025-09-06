@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 
 --[[
      Purple Color3.fromRGB(82, 3, 255)
+     Purple2 Color3.fromRGB(120, 4, 214)
      Yellow Color3.fromRGB(255, 255, 0)
      Blue Color3.fromRGB(0, 120, 255)
      Gold Color3.fromRGB(255, 215, 0)
