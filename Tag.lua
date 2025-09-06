@@ -12,7 +12,7 @@ local GROUPS = {
     {
         usernames = { "IdkMyNameBro_012" },
         tag = "Script Owner",
-        color = Color3.fromRGB(82, 3, 255)
+        color = Color3.fromRGB(120, 4, 214)
     },
     {
         usernames = { "Theo_TheoBenzo" },
