@@ -1,127 +1,98 @@
 local Players = game:GetService("Players")
 
-if script:GetAttribute("NameTagSystemInitialized") then
-    return
-end
-script:SetAttribute("NameTagSystemInitialized", true)
+--[[
+     Purple Color3.fromRGB(82, 3, 255)
+     Yellow Color3.fromRGB(255, 255, 0)
+     Blue Color3.fromRGB(0, 120, 255)
+     Gold Color3.fromRGB(255, 215, 0)
+]]
 
-local TAG_NAME = "NameTag"
-
-local TAG_GROUPS = {
-    { 
-        Names = { "IdkMyNameBro_012", "Treezz_w", "XDsomeoneX3" },
-        Text = "PlasmaByte\nScript Owner",
-        Color = Color3.fromRGB(86, 8, 255)
+local GROUPS = {
+    {
+        usernames = [ "IdkMyNameBro_012" ],
+        tag = "Script Owner",
+        color = Color3.fromRGB(82, 3, 255)
     },
     {
-        Names = { "Theo_TheoBenzo" },
-        Text = "Theo\nThe GOAT",
-        Color = Color3.fromRGB(255, 255, 0)
+        usernames = [ "Theo_TheoBenzo" ],
+        tag = "The Chosen One",
+        color = Color3.fromRGB(0, 120, 255)
     },
     {
-        Names = { "buratitat7" },
-        Text = "Goofy lil\ngoober",
-        Color = Color3.fromRGB(255, 255, 0)
+        usernames = [ "buratitat7", "yourgames9" ],
+        tag = "VIP",
+        color = Color3.fromRGB(255, 215, 0)
     },
-    {
-        Names = { "faroukhaddiedevelope2" },
-        Text = "(Blacklisted)\nFucking loser 🤣",
-        Color = Color3.fromRGB(40, 168, 8)
-    },
-    {
-        Names = { "yourgames9" },
-        Text = "(Youtuber)\nZombie",
-        Color = Color3.fromRGB(40, 168, 8)
-    }
 }
 
-local NameToTag = {}
-for _, group in ipairs(TAG_GROUPS) do
-    for _, name in ipairs(group.Names) do
-        NameToTag[name] = { Text = group.Text, Color = group.Color }
+local CHECK_INTERVAL = 2
+
+local UserGroupLookup = {}
+for _, group in ipairs(GROUPS) do
+    for _, username in ipairs(group.usernames) do
+        UserGroupLookup[username] = {
+            tag = group.tag,
+            color = group.color
+        }
     end
 end
-
-local playerConnections = {}
 
 local function createTag(player)
-    local char = player.Character
-    if not char then return end
-
-    local head = char:FindFirstChild("Head")
-    if not head then
-        head = char:WaitForChild("Head", 5)
-        if not head then return end
-    end
-
-    local existingTag = head:FindFirstChild(TAG_NAME)
-    if existingTag then
-        existingTag:Destroy()
-    end
-
-    local tagInfo = NameToTag[player.Name]
-    if not tagInfo then return end
-
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = TAG_NAME
-    billboard.Size = UDim2.new(0, 100, 0, 40)
-    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
-    billboard.Adornee = head
-    billboard.AlwaysOnTop = true
-    billboard.Parent = head
-
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.TextStrokeTransparency = 0
-    label.TextScaled = true
-    label.Font = Enum.Font.Sarpanch
-    label.Text = tagInfo.Text
-    label.TextColor3 = tagInfo.Color
-    label.Parent = billboard
-end
-
-local function onCharacterAdded(character, player)
-    createTag(player)
-end
-
-local function setupPlayer(player)
-    if not NameToTag[player.Name] then return end
-    
-    if playerConnections[player] then
-        playerConnections[player]:Disconnect()
-    end
-    
-    playerConnections[player] = player.CharacterAdded:Connect(function(character)
-        onCharacterAdded(character, player)
-    end)
-    
-    if player.Character then
-        createTag(player)
+    if player.Character and player.Character:FindFirstChild("Head") then
+        local groupInfo = UserGroupLookup[player.Name]
+        if not groupInfo then return end
+        
+        local tagName = groupInfo.tag .. "Tag"
+        
+        if player.Character.Head:FindFirstChild(tagName) then
+            player.Character.Head:FindFirstChild(tagName):Destroy()
+        end
+        
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = tagName
+        billboard.Size = UDim2.new(0, 100, 0, 40)
+        billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+        billboard.Adornee = player.Character.Head
+        billboard.AlwaysOnTop = true
+        billboard.Parent = player.Character.Head
+        
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.Text = groupInfo.tag
+        label.TextColor3 = groupInfo.color
+        label.TextStrokeTransparency = 0
+        label.TextScaled = true
+        label.Font = Enum.Font.Sarpanch
+        label.Parent = billboard
     end
 end
 
-local function onPlayerRemoving(player)
-    if playerConnections[player] then
-        playerConnections[player]:Disconnect()
-        playerConnections[player] = nil
-    end
-    
-    local char = player.Character
-    if char then
-        local head = char:FindFirstChild("Head")
-        if head then
-            local tag = head:FindFirstChild(TAG_NAME)
-            if tag then
-                tag:Destroy()
+task.spawn(function()
+    while true do
+        for _, player in pairs(Players:GetPlayers()) do
+            if UserGroupLookup[player.Name] then
+                createTag(player)
             end
         end
+        task.wait(CHECK_INTERVAL)
     end
-end
+end)
 
-for _, player in ipairs(Players:GetPlayers()) do
-    setupPlayer(player)
-end
+Players.PlayerAdded:Connect(function(player)
+    if UserGroupLookup[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
+    end
+end)
 
-Players.PlayerAdded:Connect(setupPlayer)
-Players.PlayerRemoving:Connect(onPlayerRemoving)
+Players.PlayerAdded:Connect(function(player)
+    if UserGroupLookup[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
+    end
+end)
