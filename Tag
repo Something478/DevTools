@@ -9,17 +9,17 @@ local Players = game:GetService("Players")
 
 local GROUPS = {
     {
-        usernames = [ "IdkMyNameBro_012" ],
+        usernames = { "IdkMyNameBro_012" },
         tag = "Script Owner",
         color = Color3.fromRGB(82, 3, 255)
     },
     {
-        usernames = [ "Theo_TheoBenzo" ],
+        usernames = { "Theo_TheoBenzo" },
         tag = "The Chosen One",
         color = Color3.fromRGB(0, 120, 255)
     },
     {
-        usernames = [ "buratitat7", "yourgames9" ],
+        usernames = { "buratitat7", "yourgames9" },
         tag = "VIP",
         color = Color3.fromRGB(255, 215, 0)
     },
@@ -76,15 +76,6 @@ task.spawn(function()
             end
         end
         task.wait(CHECK_INTERVAL)
-    end
-end)
-
-Players.PlayerAdded:Connect(function(player)
-    if UserGroupLookup[player.Name] then
-        player.CharacterAdded:Connect(function()
-            task.wait(1)
-            createTag(player)
-        end)
     end
 end)
 
