@@ -28,7 +28,7 @@ local TAG_GROUPS = {
         Text = "(Blacklisted)\nFucking loser 🤣",
         Color = Color3.fromRGB(40, 168, 8)
     },
-        {
+    {
         Names = { "yourgames9" },
         Text = "(Youtuber)\nZombie",
         Color = Color3.fromRGB(40, 168, 8)
@@ -42,24 +42,21 @@ for _, group in ipairs(TAG_GROUPS) do
     end
 end
 
-local playersWithTags = {}
+local playerConnections = {}
 
 local function createTag(player)
-    if playersWithTags[player] then
-        return
-    end
-    
     local char = player.Character
     if not char then return end
 
     local head = char:FindFirstChild("Head")
     if not head then
-        head = char:WaitForChild("Head")
+        head = char:WaitForChild("Head", 5)
         if not head then return end
     end
 
-    if head:FindFirstChild(TAG_NAME) then
-        return
+    local existingTag = head:FindFirstChild(TAG_NAME)
+    if existingTag then
+        existingTag:Destroy()
     end
 
     local tagInfo = NameToTag[player.Name]
@@ -82,12 +79,34 @@ local function createTag(player)
     label.Text = tagInfo.Text
     label.TextColor3 = tagInfo.Color
     label.Parent = billboard
-    
-    playersWithTags[player] = true
 end
 
-Players.PlayerRemoving:Connect(function(player)
-    playersWithTags[player] = nil
+local function onCharacterAdded(character, player)
+    createTag(player)
+end
+
+local function setupPlayer(player)
+    if not NameToTag[player.Name] then return end
+    
+    if playerConnections[player] then
+        playerConnections[player]:Disconnect()
+    end
+    
+    playerConnections[player] = player.CharacterAdded:Connect(function(character)
+        onCharacterAdded(character, player)
+    end)
+    
+    if player.Character then
+        createTag(player)
+    end
+end
+
+local function onPlayerRemoving(player)
+    if playerConnections[player] then
+        playerConnections[player]:Disconnect()
+        playerConnections[player] = nil
+    end
+    
     local char = player.Character
     if char then
         local head = char:FindFirstChild("Head")
@@ -98,26 +117,11 @@ Players.PlayerRemoving:Connect(function(player)
             end
         end
     end
-end)
-
-for _, player in ipairs(Players:GetPlayers()) do
-    if NameToTag[player.Name] then
-        player.CharacterAdded:Connect(function()
-            task.wait(1)
-            createTag(player)
-        end)
-
-        if player.Character then
-            createTag(player)
-        end
-    end
 end
 
-Players.PlayerAdded:Connect(function(player)
-    if NameToTag[player.Name] then
-        player.CharacterAdded:Connect(function()
-            task.wait(1)
-            createTag(player)
-        end)
-    end
-end)
+for _, player in ipairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+Players.PlayerAdded:Connect(setupPlayer)
+Players.PlayerRemoving:Connect(onPlayerRemoving)
