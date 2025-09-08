@@ -20,8 +20,8 @@ local GROUPS = {
         color = Color3.fromRGB(0, 120, 255)
     },
     {
-        usernames = { "buratitat7", "yourgames9" },
-        tag = "VIP",
+        usernames = { "buratitat7", "yourgames9", "lIlIIIIlllIlIlIlIlIl" },
+        tag = "Cool Person",
         color = Color3.fromRGB(255, 215, 0)
     },
 }
