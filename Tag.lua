@@ -11,10 +11,6 @@ local GroupSystem = {
         [ "Theo_TheoBenzo" ] = {
             Tag = "Theo | The Goat",
             Color = Color3.fromRGB(255, 215, 0) -- Golden
-        },
-        [ "yourgames9", "buratitat7" ] = {
-            Tag = "Cool Person",
-            Color = Color3.fromRGB(255, 255, 0) -- Yellow
         }
     }
 }
