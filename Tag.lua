@@ -1,69 +1,84 @@
-local imageId = "rbxassetid://89287417287641"
-local Players = game:GetService("Players")
 local Players = game:GetService("Players")
 
-local TAG_NAME = "ScriptOwnerTag"
-local TARGET_USERNAMES = { "IdkMyNameBro_012" } -- Add more here
+local GroupSystem = {
+    Members = {
+        [ "IdkMyNameBro_012" ] = {
+            Tag = "Script Owner",
+            Color = Color3.fromRGB(180, 100, 255) -- Purple
+        },
+        [ "Theo_TheoBenzo" ] = {
+            Tag = "Theo | The Goat",
+            Color = Color3.fromRGB(255, 215, 0) -- Golden
+        },
+        [ "yourgames9", "buratitat7" ] = {
+            Tag = "Cool Person",
+            Color = Color3.fromRGB(255, 255, 0) -- Yellow
+        }
+    }
+}
+
+-- Tag system
+local TAG_NAME = "GroupTag"
 local CHECK_INTERVAL = 2
 
-local TargetLookup = {}
-for _, name in pairs(TARGET_USERNAMES) do
-	TargetLookup[name] = true
-end
-
 local function createTag(player)
-	if player.Character and player.Character:FindFirstChild("Head") then
-		if player.Character.Head:FindFirstChild(TAG_NAME) then return end
+    if not player.Character or not player.Character:FindFirstChild("Head") then return end
+    if player.Character.Head:FindFirstChild(TAG_NAME) then 
+        player.Character.Head:FindFirstChild(TAG_NAME):Destroy()
+    end
 
-		local billboard = Instance.new("BillboardGui")
-		billboard.Name = TAG_NAME
-		billboard.Size = UDim2.new(3, 0, 2, 0)
-		billboard.StudsOffset = Vector3.new(-0.6, 0, 0)
-		billboard.Adornee = player.Character.Head
-		billboard.AlwaysOnTop = true
-		billboard.Parent = player.Character.Head
-        local billboard1 = Instance.new("BillboardGui")
-		billboard1.Name = TAG_NAME
-		billboard1.Size = UDim2.new(0, 100, 0, 40)
-		billboard1.StudsOffset = Vector3.new(0, 2.5, 0)
-		billboard1.Adornee = player.Character.Head
-		billboard1.AlwaysOnTop = true
-		billboard1.Parent = player.Character.Head
-		local label = Instance.new("TextLabel")
-		label.Size = UDim2.new(1, 0, 1, 0)
-		label.BackgroundTransparency = 1
-		label.Text = "PlasmaByte / Script Owner"
-		label.TextColor3 = Color3.new(1, 1, 0)
-		label.TextStrokeTransparency = 0
-		label.TextScaled = true
-		label.Font = Enum.Font.Sarpanch
-       -- label.Position = UDim2.new(0,0.6,0,-100)
-		label.Parent = billboard1
-          local imageLabel = Instance.new("ImageLabel")
-          imageLabel.Size = UDim2.new(1, 0, 1, 0)
-          imageLabel.BackgroundTransparency = 1
-          imageLabel.Image = imageId
-          imageLabel.Parent = billboard
-		
-	end
+    local memberData = GroupSystem.Members[player.Name]
+    if not memberData then return end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = TAG_NAME
+    billboard.Size = UDim2.new(0, 200, 0, 60)
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+    billboard.Adornee = player.Character.Head
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = 100
+    billboard.Parent = player.Character.Head
+
+    local background = Instance.new("Frame")
+    background.Size = UDim2.new(1, 0, 1, 0)
+    background.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    background.BackgroundTransparency = 0.3
+    background.BorderSizePixel = 0
+    background.Parent = billboard
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = background
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -10, 1, -10)
+    label.Position = UDim2.new(0, 5, 0, 5)
+    label.BackgroundTransparency = 1
+    label.Text = memberData.Tag
+    label.TextColor3 = memberData.Color
+    label.TextStrokeTransparency = 0.7
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextScaled = true
+    label.Font = Enum.Font.SourceSansBold
+    label.Parent = billboard
 end
 
 task.spawn(function()
-	while true do
-		for _, player in pairs(Players:GetPlayers()) do
-			if TargetLookup[player.Name] then
-				createTag(player)
-			end
-		end
-		task.wait(CHECK_INTERVAL)
-	end
+    while true do
+        for _, player in pairs(Players:GetPlayers()) do
+            if GroupSystem.Members[player.Name] then
+                createTag(player)
+            end
+        end
+        task.wait(CHECK_INTERVAL)
+    end
 end)
 
 Players.PlayerAdded:Connect(function(player)
-	if TargetLookup[player.Name] then
-		player.CharacterAdded:Connect(function()
-			task.wait(1)
-			createTag(player)
-		end)
-	end
+    if GroupSystem.Members[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
+    end
 end)
