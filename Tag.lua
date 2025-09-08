@@ -1,5 +1,7 @@
 local Players = game:GetService("Players")
 
+local Arcade = Enum.Font.Arcade
+
 local GroupSystem = {
     Members = {
         [ "IdkMyNameBro_012" ] = {
@@ -59,7 +61,7 @@ local function createTag(player)
     label.TextStrokeTransparency = 0.7
     label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     label.TextScaled = true
-    label.Font = Enum.Font.SourceSansBold
+    label.Font = Arcade
     label.Parent = billboard
 end
 
