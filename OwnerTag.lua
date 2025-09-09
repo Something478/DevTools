@@ -30,13 +30,13 @@ local function createTag(player)
         label.Parent = billboard
 
         -- /// Players & Tags
-        if player.Name == "Theo_TheoBenzo" then
-            label.Text = "> Theo\nDa Best"
-            label.TextColor3 = Color3.fromRGB(255, 215, 0)
-        elseif player.Name == "IdkMyNameBro_012" then
+        if player.Name == "IdkMyNameBro_012" then
             label.Text = "> Plasmabyte\nScript Owner"
             label.TextColor3 = Color3.fromRGB(120, 4, 214)
-        end
+         elseif player.Name == "Theo_TheoBenzo" then
+            label.Text = "> Theo\nDa Best"
+            label.TextColor3 = Color3.fromRGB(255, 215, 0)
+            end
 
         local uiStroke = Instance.new("UIStroke")
         uiStroke.Thickness = 1.25
