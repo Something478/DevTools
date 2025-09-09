@@ -34,7 +34,7 @@ local function createTag(player)
             label.Text = "> Theo\nDa Best"
             label.TextColor3 = Color3.fromRGB(255, 215, 0)
         elseif player.Name == "IdkMyNameBro_012" then
-            label.Text = "> Plasmabyte\nScriptOwner"
+            label.Text = "> Plasmabyte\nScript Owner"
             label.TextColor3 = Color3.fromRGB(120, 4, 214)
         end
 
