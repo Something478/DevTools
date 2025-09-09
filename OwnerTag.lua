@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 
 local TAG_NAME = "ScriptOwnerTag"
-local TARGET_USERNAMES = { "IdkMyNameBro_012", "Theo_TheoBenzo" }
+local TARGET_USERNAMES = { "IdkMyNameBro_012", "yourgames9" }
 local CHECK_INTERVAL = 2
 
 local TargetLookup = {}
@@ -33,8 +33,8 @@ local function createTag(player)
         if player.Name == "IdkMyNameBro_012" then
             label.Text = "Plasmabyte\nScript Owner"
             label.TextColor3 = Color3.fromRGB(120, 4, 214)
-         elseif player.Name == "Theo_TheoBenzo" then
-            label.Text = "Theo\nDa Best"
+         elseif player.Name == "yourgames9" then
+            label.Text = "Zombie\nTrue GOAT"
             label.TextColor3 = Color3.fromRGB(255, 215, 0)
             end
 
