@@ -1,9 +1,9 @@
--- /// Services
+-- Services
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 
--- /// Setup
+-- Setup
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
@@ -13,12 +13,12 @@ gui.ResetOnSpawn = false
 gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- /// Auto-scaling function
+-- Auto-scaling function
 local function scaleValue(value)
     return value * (math.min(playerGui.AbsoluteSize.X, playerGui.AbsoluteSize.Y) / 1080)
 end
 
--- /// Main Frame
+-- Main Frame
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, scaleValue(350), 0, scaleValue(400))
 frame.Position = UDim2.new(0.5, -scaleValue(175), 1.5, 0)
@@ -37,7 +37,7 @@ outline.Color = Color3.fromRGB(80, 0, 120)
 outline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 outline.Parent = frame
 
--- /// Header with gradient
+-- Header with gradient
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, scaleValue(40))
 header.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -56,7 +56,7 @@ headerGradient.Color = ColorSequence.new{
 }
 headerGradient.Parent = header
 
--- /// Title with Fantasy font
+-- Title with Fantasy font
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 1, 0)
 title.BackgroundTransparency = 1
@@ -66,7 +66,7 @@ title.TextSize = scaleValue(18)
 title.TextColor3 = Color3.fromRGB(220, 220, 220)
 title.Parent = header
 
--- /// Close Button
+-- Close Button
 local closeBtn = Instance.new("ImageButton")
 closeBtn.Size = UDim2.new(0, scaleValue(24), 0, scaleValue(24))
 closeBtn.Position = UDim2.new(1, -scaleValue(32), 0, scaleValue(8))
@@ -97,7 +97,7 @@ closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
--- /// Button container with scrolling
+-- Button container with scrolling
 local buttonContainer = Instance.new("ScrollingFrame")
 buttonContainer.Size = UDim2.new(1, 0, 1, -scaleValue(50))
 buttonContainer.Position = UDim2.new(0, 0, 0, scaleValue(50))
@@ -105,7 +105,7 @@ buttonContainer.BackgroundTransparency = 1
 buttonContainer.BorderSizePixel = 0
 buttonContainer.ScrollBarThickness = scaleValue(4)
 buttonContainer.ScrollBarImageColor3 = Color3.fromRGB(80, 0, 120)
-buttonContainer.CanvasSize = UDim2.new(0, 0, 0, scaleValue(500))
+buttonContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
 buttonContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
 buttonContainer.Parent = frame
 
@@ -115,7 +115,7 @@ uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 uiListLayout.Parent = buttonContainer
 
--- /// Button creation function
+-- Button creation function
 local function createButton(name, layoutOrder, func)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0.9, 0, 0, scaleValue(50))
@@ -135,7 +135,7 @@ local function createButton(name, layoutOrder, func)
     btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     btnStroke.Parent = button
 
-    -- /// Button text with Fantasy font
+    -- Button text with Fantasy font
     local buttonTitle = Instance.new("TextLabel")
     buttonTitle.Size = UDim2.new(1, 0, 1, 0)
     buttonTitle.BackgroundTransparency = 1
@@ -157,7 +157,7 @@ local function createButton(name, layoutOrder, func)
     highlightCorner.CornerRadius = UDim.new(0, scaleValue(8))
     highlightCorner.Parent = buttonHighlight
 
-    -- /// Hover effects
+    -- Hover effects
     button.MouseEnter:Connect(function()
         TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             BackgroundColor3 = Color3.fromRGB(35, 35, 35)
@@ -182,7 +182,7 @@ local function createButton(name, layoutOrder, func)
         }):Play()
     end)
 
-    -- /// Click effect
+    -- Click effect
     button.MouseButton1Down:Connect(function()
         TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             BackgroundColor3 = Color3.fromRGB(45, 45, 45)
@@ -210,7 +210,7 @@ local function createButton(name, layoutOrder, func)
             BackgroundTransparency = 0.8
         }):Play()
         
-        -- /// Animate all buttons fading out
+        -- Animate all buttons fading out
         for _, child in ipairs(buttonContainer:GetChildren()) do
             if child:IsA("TextButton") then
                 TweenService:Create(child, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -220,7 +220,7 @@ local function createButton(name, layoutOrder, func)
             end
         end
         
-        -- /// Slide out and execute
+        -- Slide out and execute
         TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
             Position = UDim2.new(0.5, -scaleValue(175), -0.5, 0)
         }):Play()
@@ -230,7 +230,7 @@ local function createButton(name, layoutOrder, func)
     end)
 end
 
--- /// Create keyboard buttons
+-- Create keyboard buttons
 createButton("Byte Keyboard", 1, function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/ByteKeyboard.lua"))()
 end)
@@ -251,12 +251,12 @@ createButton("Mob Keyboard", 5, function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
 end)
 
--- /// Spawn Animation
+-- Spawn Animation
 TweenService:Create(frame, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
     Position = UDim2.new(0.5, -scaleValue(175), 0.5, -scaleValue(200))
 }):Play()
 
--- /// Auto-scale on screen resize
+-- Auto-scale on screen resize
 playerGui:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
     frame.Size = UDim2.new(0, scaleValue(350), 0, scaleValue(400))
     frame.Position = UDim2.new(0.5, -scaleValue(175), 0.5, -scaleValue(200))
