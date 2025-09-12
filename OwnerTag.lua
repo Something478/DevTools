@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 
 local TAG_NAME = "ScriptOwnerTag"
 local TARGET_USERNAMES = { "IdkMyNameBro_012", "yourgames9" }
@@ -7,6 +8,28 @@ local CHECK_INTERVAL = 2
 local TargetLookup = {}
 for _, name in pairs(TARGET_USERNAMES) do
     TargetLookup[name] = true
+end
+
+local function TextEffect(label)
+    local colors = {
+        Color3.fromRGB(180, 70, 255),
+        Color3.fromRGB(120, 50, 255),
+        Color3.fromRGB(70, 30, 255),
+        Color3.fromRGB(0, 150, 255),
+        Color3.fromRGB(0, 200, 255)
+    }
+    
+    local currentIndex = 1
+    spawn(function()
+        while label.Parent do
+            local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+            local tween = TweenService:Create(label, tweenInfo, {TextColor3 = colors[currentIndex]})
+            tween:Play()
+            
+            currentIndex = currentIndex % #colors + 1
+            wait(1.7)
+        end
+    end)
 end
 
 local function createTag(player)
@@ -23,58 +46,52 @@ local function createTag(player)
 
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 1, 0)
-        frame.BackgroundTransparency = 0.7
-        frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        frame.BackgroundTransparency = 1
         frame.BorderSizePixel = 0
         frame.Parent = billboard
-        
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = frame
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.9, 0, 0.9, 0)
-        label.Position = UDim2.new(0.05, 0, 0.05, 0)
+        label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundTransparency = 1
         label.TextScaled = true
-        label.Font = Enum.Font.GothamBlack
         label.TextStrokeTransparency = 0
-        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0) 
+        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        label.TextStrokeTransparency = 0.3
+        label.ZIndex = 2
         label.Parent = frame
 
         if player.Name == "IdkMyNameBro_012" then
             label.Text = "PlasmaByte\nScript Owner"
-            label.TextColor3 = Color3.fromRGB(180, 70, 255)
             label.Font = Enum.Font.Arcade
-            frame.BackgroundColor3 = Color3.fromRGB(30, 0, 50)
-
-            local pulseTween = game:GetService("TweenService"):Create(
-                label,
-                TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-                {TextTransparency = 0.2}
-            )
-            pulseTween:Play()
+            TextEffect(label)
             
         elseif player.Name == "yourgames9" then
-            label.Text = "Zombue\nTrue( GOAT"
-            label.TextColor3 = Color3.fromRGB(255, 215, 0)
-  
+            label.Text = "Zombie\nTrue GOAT"
             label.Font = Enum.Font.Sarpanch
-            frame.BackgroundColor3 = Color3.fromRGB(50, 40, 0)
-
-            local glowTween = game:GetService("TweenService"):Create(
-                label,
-                TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-                {TextColor3 = Color3.fromRGB(255, 255, 150)}
-            )
-            glowTween:Play()
         end
 
-        local uiStroke = Instance.new("UIStroke")
-        uiStroke.Thickness = 2
-        uiStroke.Color = Color3.fromRGB(0, 0, 0) 
-        uiStroke.LineJoinMode = Enum.LineJoinMode.Round
-        uiStroke.Parent = label
+        local stars = Instance.new("Frame")
+        stars.Size = UDim2.new(1, 0, 1, 0)
+        stars.BackgroundTransparency = 1
+        stars.Parent = frame
+        
+        for i = 1, 15 do
+            local star = Instance.new("Frame")
+            star.Size = UDim2.new(0, math.random(1, 3), 0, math.random(1, 3))
+            star.Position = UDim2.new(0, math.random(0, 130), 0, math.random(0, 45))
+            star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            star.BackgroundTransparency = math.random(5, 8)/10
+            star.BorderSizePixel = 0
+            star.ZIndex = 1
+            star.Parent = stars
+            
+            spawn(function()
+                while star.Parent do
+                    wait(math.random(5, 15)/10)
+                    star.Visible = not star.Visible
+                end
+            end)
+        end
     end
 end
 
@@ -97,3 +114,15 @@ Players.PlayerAdded:Connect(function(player)
         end)
     end
 end)
+
+for _, player in pairs(Players:GetPlayers()) do
+    if TargetLookup[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
+        if player.Character then
+            createTag(player)
+        end
+    end
+end
