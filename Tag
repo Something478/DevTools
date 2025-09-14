@@ -61,7 +61,7 @@ local function createTag(player)
         label.Parent = frame
 
         if player.Name == "IdkMyNameBro_012" then
-            label.Text = "PlasmaByte\nScript Owner"
+            label.Text = "PurpleNova\nScript Owner"
             label.Font = Enum.Font.Arcade
             TextEffect(label)
             
