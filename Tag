@@ -7,7 +7,7 @@ local CHECK_INTERVAL = 2
 -- Configuration for specific users
 local UserConfigs = {
     ["IdkMyNameBro_012"] = {
-        Text = "PurpleNova\nScript Owner",
+        Text = "SuperNova\nScript Owner",
         Font = Enum.Font.Arcade,
         Effect = "Rainbow"
     },
