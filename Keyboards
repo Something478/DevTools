@@ -1,4 +1,3 @@
---// Services
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -16,7 +15,6 @@ local function scaleValue(value)
     return value * (math.min(playerGui.AbsoluteSize.X, playerGui.AbsoluteSize.Y) / 1080)
 end
 
-// Main Frame
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, scaleValue(350), 0, scaleValue(400))
 frame.Position = UDim2.new(0.5, -scaleValue(175), 1.5, 0)
@@ -220,19 +218,19 @@ local function createButton(name, layoutOrder, func)
 end
 
 createButton("Byte Keyboard", 1, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/ByteKeyboard.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Byte.lua"))()
 end)
 
 createButton("Kilobyte Keyboard", 2, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/KilobyteKeyboard.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/KiloByte.lua"))()
 end)
 
 createButton("Delta Keyboard", 3, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/DeltaKeyboard.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
 end)
 
 createButton("Virtual Keyboard", 4, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/VirtualKeyboard.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Virtual.lua"))()
 end)
 
 createButton("Mob Keyboard", 5, function()
