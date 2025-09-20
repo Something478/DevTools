@@ -1,142 +1,75 @@
+local imageId = "rbxassetid://89287417287641"
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 
 local TAG_NAME = "ScriptOwnerTag"
 local CHECK_INTERVAL = 2
 
--- Configuration for specific users
-local UserConfigs = {
-    ["IdkMyNameBro_012"] = {
-        Text = "SuperNova\nScript Owner",
-        Font = Enum.Font.Arcade,
-        Effect = "Rainbow"
-    },
-    ["yourgames9"] = {
-        Text = "Zombie\nTrue GOAT",
-        Font = Enum.Font.Sarpanch,
-        Effect = "None"
-    },
+local TargetLookup = {
+    ["IdkMyNameBro_012"] = true
 }
 
--- Rainbow text effect with cleanup
-local function TextEffect(label)
-    local colors = {
-        Color3.fromRGB(180, 70, 255),
-        Color3.fromRGB(120, 50, 255),
-        Color3.fromRGB(70, 30, 255),
-        Color3.fromRGB(0, 150, 255),
-        Color3.fromRGB(0, 200, 255)
-    }
-    local currentIndex = 1
-    local connection
-    connection = game:GetService("RunService").Heartbeat:Connect(function()
-        if not label.Parent then
-            connection:Disconnect()
-            return
-        end
-        local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-        local tween = TweenService:Create(label, tweenInfo, {TextColor3 = colors[currentIndex]})
-        tween:Play()
-        currentIndex = (currentIndex % #colors) + 1
-    end)
-end
-
--- Create a tag for a player
 local function createTag(player)
-    if not UserConfigs[player.Name] then return end
-    if not (player.Character and player.Character:FindFirstChild("Head")) then return end
-    if player.Character.Head:FindFirstChild(TAG_NAME) then return end
-
-    local config = UserConfigs[player.Name]
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = TAG_NAME
-    billboard.Size = UDim2.new(0, 140, 0, 50)
-    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
-    billboard.Adornee = player.Character.Head
-    billboard.AlwaysOnTop = true
-    billboard.Parent = player.Character.Head
-
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
-    frame.BackgroundTransparency = 1
-    frame.BorderSizePixel = 0
-    frame.Parent = billboard
-
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.TextScaled = true
-    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    label.TextStrokeTransparency = 0.3
-    label.ZIndex = 2
-    label.Text = config.Text
-    label.Font = config.Font
-    label.Parent = frame
-
-    if config.Effect == "Rainbow" then
-        TextEffect(label)
-    end
-
-    local stars = Instance.new("Frame")
-    stars.Size = UDim2.new(1, 0, 1, 0)
-    stars.BackgroundTransparency = 1
-    stars.Parent = frame
-
-    for i = 1, 15 do
-        local star = Instance.new("Frame")
-        star.Size = UDim2.new(0, math.random(1, 3), 0, math.random(1, 3))
-        star.Position = UDim2.new(0, math.random(0, 130), 0, math.random(0, 45))
-        star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        star.BackgroundTransparency = math.random(5, 8) / 10
-        star.BorderSizePixel = 0
-        star.ZIndex = 1
-        star.Parent = stars
-
-        task.spawn(function()
-            while star.Parent do
-                task.wait(math.random(5, 15) / 10)
-                if star.Parent then
-                    star.Visible = not star.Visible
-                end
-            end
-        end)
-    end
-end
-
-Players.PlayerAdded:Connect(function(player)
-    if UserConfigs[player.Name] then
-        local characterConnection
-        characterConnection = player.CharacterAdded:Connect(function()
-            player.CharacterAppearanceLoaded:Wait()
-            createTag(player)
-        end)
-
-        -- Cleanup when player leaves
-        player.AncestryChanged:Connect(function()
-            if not player.Parent then
-                characterConnection:Disconnect()
-            end
-        end)
-
-        if player.Character then
-            createTag(player)
+    if player.Character and player.Character:FindFirstChild("Head") then
+        if player.Character.Head:FindFirstChild(TAG_NAME) then 
+            player.Character.Head:FindFirstChild(TAG_NAME):Destroy()
         end
-    end
-end)
 
-for _, player in pairs(Players:GetPlayers()) do
-    if UserConfigs[player.Name] then
-        createTag(player)
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = TAG_NAME
+        billboard.Size = UDim2.new(3, 0, 2, 0)
+        billboard.StudsOffset = Vector3.new(-0.6, 0, 0)
+        billboard.Adornee = player.Character.Head
+        billboard.AlwaysOnTop = true
+        billboard.Parent = player.Character.Head
+        
+        local textBillboard = Instance.new("BillboardGui")
+        textBillboard.Name = "StarFlowTag"
+        textBillboard.Size = UDim2.new(0, 200, 0, 40)
+        textBillboard.StudsOffset = Vector3.new(0, 2.5, 0)
+        textBillboard.Adornee = player.Character.Head
+        textBillboard.AlwaysOnTop = true
+        textBillboard.Parent = player.Character.Head
+        
+        local imageLabel = Instance.new("ImageLabel")
+        imageLabel.Size = UDim2.new(1, 0, 1, 0)
+        imageLabel.BackgroundTransparency = 1
+        imageLabel.Image = imageId
+        imageLabel.Parent = billboard
+        
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.Text = "StarFlow\nScript Owner"
+        label.TextStrokeTransparency = 0
+        label.TextScaled = true
+        label.Font = Enum.Font.Sarpanch
+        label.Parent = textBillboard
+        
+        local hue = 0
+        while textBillboard.Parent do
+            hue = (hue + 0.01) % 1
+            label.TextColor3 = Color3.fromHSV(hue, 1, 1)
+            task.wait(0.1)
+        end
     end
 end
 
 task.spawn(function()
     while true do
         for _, player in pairs(Players:GetPlayers()) do
-            if UserConfigs[player.Name] and player.Character and not player.Character.Head:FindFirstChild(TAG_NAME) then
+            if TargetLookup[player.Name] then
                 createTag(player)
             end
         end
         task.wait(CHECK_INTERVAL)
+    end
+end)
+
+Players.PlayerAdded:Connect(function(player)
+    if TargetLookup[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
     end
 end)
